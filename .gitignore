@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Node / frontend
+client/node_modules/
+client/dist/
+client/.vite/
+
+# Django artifacts
+server/db.sqlite3
+server/staticfiles/
+
+# Docker
+*.log
+
+# Local overrides
+.env
+*.env
+
+# Do not version external user module
+user_module/
