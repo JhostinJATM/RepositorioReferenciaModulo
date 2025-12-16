@@ -17,7 +17,7 @@ const PruebasFisicasList = () => {
   } = usePruebaFisicaStore()
   
   const { hasRole } = useAuthStore()
-  const canEdit = hasRole(['ADMIN', 'DOCENTE', 'ESTUDIANTE'])
+  const canEdit = hasRole(['ADMIN', 'ENTRENADOR', 'ESTUDIANTE_VINCULACION'])
 
   useEffect(() => {
     fetchPruebas()

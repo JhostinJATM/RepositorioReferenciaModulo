@@ -5,20 +5,12 @@ import { jwtDecode } from 'jwt-decode'
 const mapStamentToRole = (stament) => {
   if (!stament) return null
   const normalized = stament.toUpperCase()
-  switch (normalized) {
-    case 'ADMINISTRATIVOS':
-      return 'ADMIN'
-    case 'DOCENTES':
-      return 'DOCENTE'
-    case 'ESTUDIANTES':
-      return 'ESTUDIANTE'
-    case 'TRABAJADORES':
-      return 'TRABAJADOR'
-    case 'EXTERNOS':
-      return 'EXTERNO'
-    default:
-      return null
-  }
+
+  if (normalized.includes('ADMIN')) return 'ADMIN'
+  if (normalized.includes('DOCENTE') || normalized.includes('ENTRENADOR')) return 'ENTRENADOR'
+  if (normalized.includes('ESTUDIANT')) return 'ESTUDIANTE_VINCULACION'
+
+  return null
 }
 
 const useAuthStore = create(

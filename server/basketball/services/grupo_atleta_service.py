@@ -6,7 +6,7 @@ import logging
 from typing import List, Optional, Dict, Any
 from django.core.exceptions import ValidationError
 from ..dao.grupo_atleta_dao import GrupoAtletaDAO
-from ..models import GrupoAtleta
+from ..models import GrupoAtleta, Atleta
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,11 @@ class GrupoAtletaService:
             if isinstance(val, (int, str)):
                 data['entrenador_id'] = data.pop('entrenador')
         
-        return self.dao.create(**data)
+        atletas_ids = data.pop('atletas', None)
+        grupo = self.dao.create(**data)
+        if atletas_ids:
+            grupo.atletas.set(Atleta.objects.filter(id__in=atletas_ids))
+        return grupo
     
     def update_grupo(self, pk: int, data: Dict[str, Any]) -> Optional[GrupoAtleta]:
         """
@@ -101,7 +105,11 @@ class GrupoAtletaService:
             if isinstance(val, (int, str)):
                 data['entrenador_id'] = data.pop('entrenador')
 
-        return self.dao.update(pk, **data)
+        atletas_ids = data.pop('atletas', None)
+        grupo = self.dao.update(pk, **data)
+        if grupo and atletas_ids is not None:
+            grupo.atletas.set(Atleta.objects.filter(id__in=atletas_ids))
+        return grupo
     
     def delete_grupo(self, pk: int) -> bool:
         """
@@ -118,6 +126,13 @@ class GrupoAtletaService:
     def get_grupo_by_id(self, pk: int) -> Optional[GrupoAtleta]:
         """Obtiene un grupo por ID"""
         return self.dao.get_by_id(pk)
+
+    def set_atletas(self, pk: int, atleta_ids: List[int]) -> Optional[GrupoAtleta]:
+        grupo = self.dao.get_by_id(pk)
+        if not grupo:
+            return None
+        grupo.atletas.set(Atleta.objects.filter(id__in=atleta_ids))
+        return grupo
     
     def get_all_grupos(self) -> List[GrupoAtleta]:
         """Obtiene todos los grupos activos"""

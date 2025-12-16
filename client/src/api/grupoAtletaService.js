@@ -61,6 +61,14 @@ const GrupoAtletaService = {
     const response = await apiClient.get(`${ENDPOINTS.GRUPOS_ATLETAS}${id}/atletas`)
     return response.data
   },
+
+  /**
+   * Asignar atletas a un grupo (reemplaza la lista)
+   */
+  asignarAtletas: async (id, atletas) => {
+    const response = await apiClient.post(`${ENDPOINTS.GRUPOS_ATLETAS}${id}/asignar_atletas/`, { atletas })
+    return response.data
+  },
 }
 
 export default GrupoAtletaService

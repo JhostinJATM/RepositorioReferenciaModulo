@@ -17,7 +17,7 @@ const AtletasList = () => {
   } = useAtletaStore()
   
   const { hasRole } = useAuthStore()
-  const canEdit = hasRole(['ADMIN', 'DOCENTE'])
+  const canEdit = hasRole(['ADMIN', 'ENTRENADOR', 'ESTUDIANTE_VINCULACION'])
 
   useEffect(() => {
     fetchAtletas()

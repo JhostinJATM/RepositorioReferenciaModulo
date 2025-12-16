@@ -13,22 +13,12 @@ def map_stament_to_role(value):
     if not value:
         return None
     normalized = str(value).upper()
-    if 'ADMINISTRATIV' in normalized:
+    if 'ADMIN' in normalized:
         return 'ADMIN'
-    if 'DOCENTE' in normalized:
+    if 'DOCENTE' in normalized or 'ENTRENADOR' in normalized:
         return 'ENTRENADOR'
     if 'ESTUDIANT' in normalized:
-        return 'PASANTE'
-    if 'TRABAJADOR' in normalized:
-        return 'TRABAJADOR'
-    if 'EXTERN' in normalized:
-        return 'EXTERNO'
-    if 'ADMIN' == normalized:
-        return 'ADMIN'
-    if 'ENTRENADOR' == normalized:
-        return 'ENTRENADOR'
-    if 'PASANTE' == normalized:
-        return 'PASANTE'
+        return 'ESTUDIANTE_VINCULACION'
     return None
 
 
@@ -47,9 +37,9 @@ class BaseRolePermission(permissions.BasePermission):
 
         if 'ADMIN' in self.allowed_roles and role == 'ADMIN':
             return True
-        if 'ENTRENADOR' in self.allowed_roles and role in ('ENTRENADOR', 'DOCENTE'):
+        if 'ENTRENADOR' in self.allowed_roles and role == 'ENTRENADOR':
             return True
-        if 'PASANTE' in self.allowed_roles and role in ('PASANTE', 'ESTUDIANTE'):
+        if 'ESTUDIANTE_VINCULACION' in self.allowed_roles and role == 'ESTUDIANTE_VINCULACION':
             return True
         return False
 
@@ -91,10 +81,13 @@ class IsEntrenador(BaseRolePermission):
     allowed_roles = ['ENTRENADOR']
 
 class IsPasante(BaseRolePermission):
-    allowed_roles = ['PASANTE']
+    allowed_roles = ['ESTUDIANTE_VINCULACION']
 
 class IsAdminOrEntrenadorOrPasante(BaseRolePermission):
-    allowed_roles = ['ADMIN', 'ENTRENADOR', 'PASANTE']
+    allowed_roles = ['ADMIN', 'ENTRENADOR', 'ESTUDIANTE_VINCULACION']
 
 class IsEntrenadorOrAdmin(BaseRolePermission):
     allowed_roles = ['ENTRENADOR', 'ADMIN']
+
+# Alias utilizado en controladores para acceso ampliado a grupos/atletas
+IsAdminOrEntrenador = IsEntrenadorOrAdmin

@@ -17,7 +17,7 @@ const GruposList = () => {
   } = useGrupoStore()
   
   const { hasRole } = useAuthStore()
-  const canEdit = hasRole(['ADMIN', 'DOCENTE'])
+  const canEdit = hasRole(['ADMIN', 'ENTRENADOR'])
 
   useEffect(() => {
     fetchGrupos()
@@ -30,8 +30,10 @@ const GruposList = () => {
   }
 
   const columns = [
-    { key: 'nombre_grupo', title: 'Nombre' },
+    { key: 'nombre', title: 'Nombre' },
     { key: 'categoria', title: 'Categoría' },
+    { key: 'rango_edad_minima', title: 'Edad Min' },
+    { key: 'rango_edad_maxima', title: 'Edad Max' },
     { key: 'descripcion', title: 'Descripción' },
     {
       key: 'actions',

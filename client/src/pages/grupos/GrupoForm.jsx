@@ -16,7 +16,7 @@ const GrupoForm = () => {
     descripcion: '',
     rango_edad_minima: 0,
     rango_edad_maxima: 99,
-    entrenador: 1,
+    entrenador: 13, // id de entrenador demo creado en backend
   })
 
   const isEdit = !!id
@@ -37,7 +37,7 @@ const GrupoForm = () => {
         descripcion: data.descripcion || '',
         rango_edad_minima: data.rango_edad_minima ?? 0,
         rango_edad_maxima: data.rango_edad_maxima ?? 99,
-        entrenador: data.entrenador || 1,
+        entrenador: data.entrenador || 13,
       })
     } catch (error) {
       console.error('Error cargando grupo:', error)

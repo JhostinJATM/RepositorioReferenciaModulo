@@ -1,8 +1,9 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from ..services.grupo_atleta_service import GrupoAtletaService
-from ..serializers import GrupoAtletaSerializer
-from ..permissions import IsAdmin, IsAdminOrEntrenadorOrPasante
+from ..serializers import GrupoAtletaSerializer, AtletaSerializer
+from ..permissions import IsAdmin, IsAdminOrEntrenadorOrPasante, IsAdminOrEntrenador
 
 class GrupoAtletaController(viewsets.ViewSet):
     """
@@ -53,3 +54,26 @@ class GrupoAtletaController(viewsets.ViewSet):
         if not success:
             return Response({'error': 'Grupo no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['get'], permission_classes=[IsAdminOrEntrenador])
+    def atletas(self, request, pk=None):
+        """Lista atletas asociados al grupo"""
+        grupo = self.service.get_grupo_by_id(pk)
+        if not grupo:
+            return Response({'error': 'Grupo no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        atletas = grupo.atletas.all()
+        serializer = AtletaSerializer(atletas, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminOrEntrenador])
+    def asignar_atletas(self, request, pk=None):
+        """Asigna la lista de atletas al grupo (reemplaza)"""
+        ids = request.data.get('atletas', [])
+        try:
+            grupo = self.service.set_atletas(pk, ids)
+            if not grupo:
+                return Response({'error': 'Grupo no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            serializer = GrupoAtletaSerializer(grupo)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

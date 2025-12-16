@@ -48,6 +48,10 @@ const useGrupoStore = create((set, get) => ({
     try {
       const payload = mapGrupoPayload(data)
       const response = await GrupoAtletaService.create(payload)
+      // Asignar atletas si vienen
+      if (data.atletas && data.atletas.length) {
+        await GrupoAtletaService.asignarAtletas(response.id, data.atletas)
+      }
       set((state) => ({ 
         grupos: [...state.grupos, response],
         loading: false 
@@ -64,6 +68,9 @@ const useGrupoStore = create((set, get) => ({
     try {
       const payload = mapGrupoPayload(data)
       const response = await GrupoAtletaService.update(id, payload)
+      if (data.atletas) {
+        await GrupoAtletaService.asignarAtletas(id, data.atletas)
+      }
       set((state) => ({
         grupos: state.grupos.map(g => g.id === id ? response : g),
         grupoSeleccionado: null,
@@ -111,7 +118,8 @@ function mapGrupoPayload(data) {
     categoria: data.categoria || '',
     descripcion: data.descripcion || '',
     estado: data.estado ?? true,
-    entrenador: data.entrenador ?? 1, // valor por defecto (id 1) para no fallar
+    entrenador: data.entrenador ?? 13, // entrenador demo (id 13) creado para pruebas
+    atletas: data.atletas || [],
   }
 }
 

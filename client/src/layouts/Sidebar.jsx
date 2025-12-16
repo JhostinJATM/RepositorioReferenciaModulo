@@ -13,16 +13,18 @@ import {
   FiActivity,
   FiTarget,
   FiBookOpen,
+  FiShare2,
 } from 'react-icons/fi'
 
 const menuItems = [
   { path: '/', icon: FiHome, label: 'Inicio', roles: [] }, // Visible para todos
-  { path: '/atletas', icon: FiUsers, label: 'Atletas', roles: ['ADMIN', 'DOCENTE', 'ESTUDIANTE'] },
+  { path: '/atletas', icon: FiUsers, label: 'Atletas', roles: ['ADMIN', 'ENTRENADOR', 'ESTUDIANTE_VINCULACION'] },
   { path: '/entrenadores', icon: FiUserCheck, label: 'Entrenadores', roles: ['ADMIN'] },
-  { path: '/grupos', icon: FiLayers, label: 'Grupos', roles: ['ADMIN', 'DOCENTE'] },
-  { path: '/inscripciones', icon: FiClipboard, label: 'Inscripciones', roles: ['ADMIN', 'DOCENTE'] },
-  { path: '/pruebas-antropometricas', icon: FiActivity, label: 'Pruebas Antropométricas', roles: ['ADMIN', 'DOCENTE', 'ESTUDIANTE'] },
-  { path: '/pruebas-fisicas', icon: FiTarget, label: 'Pruebas Físicas', roles: ['ADMIN', 'DOCENTE', 'ESTUDIANTE'] },
+  { path: '/grupos', icon: FiLayers, label: 'Grupos', roles: ['ADMIN', 'ENTRENADOR'] },
+  { path: '/grupo-atletas', icon: FiShare2, label: 'Asignar Atletas', roles: ['ADMIN', 'ENTRENADOR'] },
+  { path: '/inscripciones', icon: FiClipboard, label: 'Inscripciones', roles: ['ADMIN', 'ENTRENADOR'] },
+  { path: '/pruebas-antropometricas', icon: FiActivity, label: 'Pruebas Antropométricas', roles: ['ADMIN', 'ENTRENADOR', 'ESTUDIANTE_VINCULACION'] },
+  { path: '/pruebas-fisicas', icon: FiTarget, label: 'Pruebas Físicas', roles: ['ADMIN', 'ENTRENADOR', 'ESTUDIANTE_VINCULACION'] },
   { path: '/estudiantes-vinculacion', icon: FiBookOpen, label: 'Est. Vinculación', roles: ['ADMIN'] },
 ]
 

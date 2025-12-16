@@ -21,9 +21,7 @@ const Header = () => {
     const roleMap = {
       'ADMIN': 'Administrador',
       'ENTRENADOR': 'Entrenador',
-      'DOCENTE': 'Entrenador',
-      'PASANTE': 'Pasante',
-      'ESTUDIANTE': 'Pasante'
+      'ESTUDIANTE_VINCULACION': 'Est. Vinculación',
     }
     return roleMap[role] || role
   }
