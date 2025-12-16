@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FiLink } from 'react-icons/fi'
+import { FiLink, FiUsers } from 'react-icons/fi'
 import { Card, Table, Button } from '../../components/common'
 import useGrupoStore from '../../stores/grupoStore'
 import useAuthStore from '../../stores/authStore'
@@ -26,6 +26,13 @@ const GrupoAtletasList = () => {
       title: 'Acciones',
       render: (_, row) => (
         <div className="flex space-x-2">
+          <button
+            onClick={() => navigate(`/grupo-atletas/${row.id}/atletas`)}
+            className="p-1 text-gray-700 hover:bg-gray-100 rounded"
+            title="Ver atletas"
+          >
+            <FiUsers className="w-4 h-4" />
+          </button>
           {canEdit && (
             <button
               onClick={() => navigate(`/grupo-atletas/${row.id}/asignar`)}
