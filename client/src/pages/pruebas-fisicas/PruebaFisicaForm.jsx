@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Button, Input, Select } from '../../components/common'
 import usePruebaFisicaStore from '../../stores/pruebaFisicaStore'
 import useAtletaStore from '../../stores/atletaStore'
@@ -48,7 +49,8 @@ const PruebaFisicaForm = () => {
       })
     } catch (error) {
       console.error('Error cargando prueba:', error)
-      navigate('..')
+      toast.error('Error al cargar la prueba')
+      navigate('/pruebas-fisicas')
     } finally {
       setLoading(false)
     }
@@ -72,13 +74,14 @@ const PruebaFisicaForm = () => {
       }
 
       if (result.success) {
-        navigate('..')
+        toast.success(isEdit ? 'Prueba actualizada correctamente' : 'Prueba creada correctamente')
+        navigate('/pruebas-fisicas')
       } else {
-        alert('Error al guardar: ' + result.error)
+        toast.error('Error al guardar: ' + result.error)
       }
     } catch (error) {
       console.error(error)
-      alert('Error inesperado')
+      toast.error('Error inesperado')
     } finally {
       setLoading(false)
     }
@@ -177,7 +180,7 @@ const PruebaFisicaForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('..')}
+              onClick={() => navigate('/pruebas-fisicas')}
             >
               Cancelar
             </Button>

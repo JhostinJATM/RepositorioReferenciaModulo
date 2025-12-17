@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Button, Input } from '../../components/common'
 import useEstudianteVinculacionStore from '../../stores/estudianteVinculacionStore'
 import { EstudianteVinculacionService } from '../../api'
@@ -43,7 +44,8 @@ const EstudianteVinculacionForm = () => {
       setFormData(data)
     } catch (error) {
       console.error('Error cargando estudiante:', error)
-      navigate('..')
+      toast.error('Error al cargar el estudiante')
+      navigate('/estudiantes-vinculacion')
     } finally {
       setLoading(false)
     }
@@ -71,9 +73,10 @@ const EstudianteVinculacionForm = () => {
         const result = await updateEstudiante(id, pasanteData)
         
         if (result.success) {
-          navigate('..')
+          toast.success('Estudiante actualizado correctamente')
+          navigate('/estudiantes-vinculacion')
         } else {
-          alert('Error al actualizar: ' + result.error)
+          toast.error('Error al actualizar: ' + result.error)
         }
       } else {
         // Modo creación: Primero crear la persona en user_module
@@ -102,12 +105,12 @@ const EstudianteVinculacionForm = () => {
             errorMsg = `El DNI/Cédula "${formData.dni}" ya está registrado en el sistema.`
           }
           
-          alert(errorMsg)
+          toast.error(errorMsg)
           return
         }
 
         if (!personaResult.personaId) {
-          alert('Error: No se recibió el ID de la persona creada')
+          toast.error('Error: No se recibió el ID de la persona creada')
           return
         }
 
@@ -124,15 +127,15 @@ const EstudianteVinculacionForm = () => {
         const result = await createEstudiante(pasanteData)
         
         if (result.success) {
-          alert('Estudiante creado exitosamente')
-          navigate('..')
+          toast.success('Estudiante creado exitosamente')
+          navigate('/estudiantes-vinculacion')
         } else {
-          alert('Error al crear estudiante: ' + result.error)
+          toast.error('Error al crear estudiante: ' + result.error)
         }
       }
     } catch (error) {
       console.error('Error en formulario:', error)
-      alert('Error: ' + (error.message || 'Error desconocido'))
+      toast.error('Error: ' + (error.message || 'Error desconocido'))
     } finally {
       setLoading(false)
     }
@@ -286,7 +289,7 @@ const EstudianteVinculacionForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('..')}
+              onClick={() => navigate('/estudiantes-vinculacion')}
             >
               Cancelar
             </Button>

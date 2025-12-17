@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Button } from '../../components/common'
 import { GrupoAtletaService, AtletaService } from '../../api'
 
@@ -39,7 +40,7 @@ const GrupoAtletasAssign = () => {
       }
     } catch (err) {
       console.error('Error cargando datos:', err)
-      setError('No se pudieron cargar los datos de grupos/atletas')
+      toast.error('No se pudieron cargar los datos de grupos/atletas')
     } finally {
       setLoading(false)
     }
@@ -56,7 +57,7 @@ const GrupoAtletasAssign = () => {
       setSelectedAtletas(atletasAsignados)
     } catch (err) {
       console.error('Error cargando atletas del grupo:', err)
-      setError('No se pudieron cargar los atletas del grupo')
+      toast.error('No se pudieron cargar los atletas del grupo')
       setSelectedAtletas([])
     } finally {
       setLoading(false)
@@ -79,9 +80,11 @@ const GrupoAtletasAssign = () => {
     setError('')
     try {
       await GrupoAtletaService.asignarAtletas(selectedGroupId, selectedAtletas)
+      toast.success('Asignación guardada correctamente')
+      navigate('/grupo-atletas')
     } catch (err) {
       console.error('Error asignando atletas:', err)
-      setError('No se pudo guardar la asignación')
+      toast.error('No se pudo guardar la asignación')
     } finally {
       setSaving(false)
     }
@@ -97,7 +100,7 @@ const GrupoAtletasAssign = () => {
           <p className="text-gray-500">Gestiona las asignaciones sin modificar los datos del grupo</p>
         </div>
         <div className="flex space-x-3">
-          <Button variant="secondary" onClick={() => navigate('..')}>
+          <Button variant="secondary" onClick={() => navigate('/grupo-atletas')}>
             Volver
           </Button>
           <Button variant="secondary" onClick={loadData} disabled={loading}>

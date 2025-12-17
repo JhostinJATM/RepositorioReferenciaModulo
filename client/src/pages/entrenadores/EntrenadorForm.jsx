@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Button, Input } from '../../components/common'
 import useEntrenadorStore from '../../stores/entrenadorStore'
 import { EntrenadorService } from '../../api'
@@ -40,7 +41,8 @@ const EntrenadorForm = () => {
       setFormData(data)
     } catch (error) {
       console.error('Error cargando entrenador:', error)
-      navigate('..')
+      toast.error('Error al cargar el entrenador')
+      navigate('/entrenadores')
     } finally {
       setLoading(false)
     }
@@ -65,9 +67,10 @@ const EntrenadorForm = () => {
         const result = await updateEntrenador(id, entrenadorData)
         
         if (result.success) {
-          navigate('..')
+          toast.success('Entrenador actualizado correctamente')
+          navigate('/entrenadores')
         } else {
-          alert('Error al actualizar: ' + result.error)
+          toast.error('Error al actualizar: ' + result.error)
         }
       } else {
         // Modo creación: Primero crear la persona en user_module
@@ -96,12 +99,12 @@ const EntrenadorForm = () => {
             errorMsg = `El DNI/Cédula "${formData.dni}" ya está registrado en el sistema.`
           }
           
-          alert(errorMsg)
+          toast.error(errorMsg)
           return
         }
 
         if (!personaResult.personaId) {
-          alert('Error: No se recibió el ID de la persona creada')
+          toast.error('Error: No se recibió el ID de la persona creada')
           return
         }
 
@@ -115,15 +118,15 @@ const EntrenadorForm = () => {
         const result = await createEntrenador(entrenadorData)
         
         if (result.success) {
-          alert('Entrenador creado exitosamente')
-          navigate('..')
+          toast.success('Entrenador creado exitosamente')
+          navigate('/entrenadores')
         } else {
-          alert('Error al crear entrenador: ' + result.error)
+          toast.error('Error al crear entrenador: ' + result.error)
         }
       }
     } catch (error) {
       console.error('Error en formulario:', error)
-      alert('Error: ' + (error.message || 'Error desconocido'))
+      toast.error('Error: ' + (error.message || 'Error desconocido'))
     } finally {
       setLoading(false)
     }
@@ -250,7 +253,7 @@ const EntrenadorForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('..')}
+              onClick={() => navigate('/entrenadores')}
             >
               Cancelar
             </Button>

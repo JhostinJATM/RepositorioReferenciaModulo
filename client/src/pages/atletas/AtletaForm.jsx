@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Button, Input, Select } from '../../components/common'
 import useAtletaStore from '../../stores/atletaStore'
 import { AtletaService } from '../../api'
@@ -43,7 +44,8 @@ const AtletaForm = () => {
       setFormData(data)
     } catch (error) {
       console.error('Error cargando atleta:', error)
-      navigate('..')
+      toast.error('Error al cargar el atleta')
+      navigate('/atletas')
     } finally {
       setLoading(false)
     }
@@ -67,13 +69,14 @@ const AtletaForm = () => {
       }
 
       if (result.success) {
-        navigate('..')
+        toast.success(isEdit ? 'Atleta actualizado correctamente' : 'Atleta creado correctamente')
+        navigate('/atletas')
       } else {
-        alert('Error al guardar: ' + result.error)
+        toast.error('Error al guardar: ' + result.error)
       }
     } catch (error) {
       console.error(error)
-      alert('Error inesperado')
+      toast.error('Error inesperado al guardar')
     } finally {
       setLoading(false)
     }
@@ -204,7 +207,7 @@ const AtletaForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('..')}
+              onClick={() => navigate('/atletas')}
             >
               Cancelar
             </Button>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Table, Button } from '../../components/common'
 import { GrupoAtletaService } from '../../api'
 
@@ -32,7 +33,7 @@ const GrupoAtletasDetail = () => {
       setAtletas(list)
     } catch (err) {
       console.error('Error cargando grupo o atletas:', err)
-      setError('No se pudieron cargar los datos del grupo')
+      toast.error('No se pudieron cargar los datos del grupo')
     } finally {
       setLoading(false)
     }
@@ -56,10 +57,10 @@ const GrupoAtletasDetail = () => {
           </p>
         </div>
         <div className="flex space-x-3">
-          <Button variant="secondary" onClick={() => navigate('..')}>
+          <Button variant="secondary" onClick={() => navigate('/grupo-atletas')}>
             Volver
           </Button>
-          <Button variant="secondary" onClick={() => navigate(`../${id}/asignar`)}>
+          <Button variant="secondary" onClick={() => navigate(`/grupo-atletas/${id}/asignar`)}>
             Asignar
           </Button>
           <Button variant="secondary" onClick={loadData} disabled={loading}>

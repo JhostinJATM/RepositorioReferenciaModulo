@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Button, Input, Select } from '../../components/common'
 import usePruebaAntropometricaStore from '../../stores/pruebaAntropometricaStore'
 import useAtletaStore from '../../stores/atletaStore'
@@ -44,7 +45,8 @@ const PruebaAntropometricaForm = () => {
       })
     } catch (error) {
       console.error('Error cargando prueba:', error)
-      navigate('..')
+      toast.error('Error al cargar la prueba')
+      navigate('/pruebas-antropometricas')
     } finally {
       setLoading(false)
     }
@@ -68,13 +70,14 @@ const PruebaAntropometricaForm = () => {
       }
 
       if (result.success) {
-        navigate('..')
+        toast.success(isEdit ? 'Prueba actualizada correctamente' : 'Prueba creada correctamente')
+        navigate('/pruebas-antropometricas')
       } else {
-        alert('Error al guardar: ' + result.error)
+        toast.error('Error al guardar: ' + result.error)
       }
     } catch (error) {
       console.error(error)
-      alert('Error inesperado')
+      toast.error('Error inesperado')
     } finally {
       setLoading(false)
     }
@@ -151,7 +154,7 @@ const PruebaAntropometricaForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('..')}
+              onClick={() => navigate('/pruebas-antropometricas')}
             >
               Cancelar
             </Button>

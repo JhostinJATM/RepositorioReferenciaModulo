@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 import { Card, Button, Input } from '../../components/common'
 import useGrupoStore from '../../stores/grupoStore'
 import { GrupoAtletaService } from '../../api'
@@ -41,7 +42,8 @@ const GrupoForm = () => {
       })
     } catch (error) {
       console.error('Error cargando grupo:', error)
-      navigate('..')
+      toast.error('Error al cargar el grupo')
+      navigate('/grupos')
     } finally {
       setLoading(false)
     }
@@ -65,13 +67,14 @@ const GrupoForm = () => {
       }
 
       if (result.success) {
-        navigate('..')
+        toast.success(isEdit ? 'Grupo actualizado correctamente' : 'Grupo creado correctamente')
+        navigate('/grupos')
       } else {
-        alert('Error al guardar: ' + result.error)
+        toast.error('Error al guardar: ' + result.error)
       }
     } catch (error) {
       console.error(error)
-      alert('Error inesperado')
+      toast.error('Error inesperado')
     } finally {
       setLoading(false)
     }
@@ -119,7 +122,7 @@ const GrupoForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('..')}
+              onClick={() => navigate('/grupos')}
             >
               Cancelar
             </Button>
