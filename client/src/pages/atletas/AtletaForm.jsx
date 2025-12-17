@@ -43,7 +43,7 @@ const AtletaForm = () => {
       setFormData(data)
     } catch (error) {
       console.error('Error cargando atleta:', error)
-      navigate('/atletas')
+      navigate('..')
     } finally {
       setLoading(false)
     }
@@ -67,7 +67,7 @@ const AtletaForm = () => {
       }
 
       if (result.success) {
-        navigate('/atletas')
+        navigate('..')
       } else {
         alert('Error al guardar: ' + result.error)
       }
@@ -204,7 +204,7 @@ const AtletaForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/atletas')}
+              onClick={() => navigate('..')}
             >
               Cancelar
             </Button>

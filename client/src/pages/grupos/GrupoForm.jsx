@@ -41,7 +41,7 @@ const GrupoForm = () => {
       })
     } catch (error) {
       console.error('Error cargando grupo:', error)
-      navigate('/grupos')
+      navigate('..')
     } finally {
       setLoading(false)
     }
@@ -65,7 +65,7 @@ const GrupoForm = () => {
       }
 
       if (result.success) {
-        navigate('/grupos')
+        navigate('..')
       } else {
         alert('Error al guardar: ' + result.error)
       }
@@ -119,7 +119,7 @@ const GrupoForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/grupos')}
+              onClick={() => navigate('..')}
             >
               Cancelar
             </Button>

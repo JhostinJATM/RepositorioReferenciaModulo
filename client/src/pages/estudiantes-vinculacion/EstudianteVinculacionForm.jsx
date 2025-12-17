@@ -43,7 +43,7 @@ const EstudianteVinculacionForm = () => {
       setFormData(data)
     } catch (error) {
       console.error('Error cargando estudiante:', error)
-      navigate('/estudiantes-vinculacion')
+      navigate('..')
     } finally {
       setLoading(false)
     }
@@ -71,7 +71,7 @@ const EstudianteVinculacionForm = () => {
         const result = await updateEstudiante(id, pasanteData)
         
         if (result.success) {
-          navigate('/estudiantes-vinculacion')
+          navigate('..')
         } else {
           alert('Error al actualizar: ' + result.error)
         }
@@ -125,7 +125,7 @@ const EstudianteVinculacionForm = () => {
         
         if (result.success) {
           alert('Estudiante creado exitosamente')
-          navigate('/estudiantes-vinculacion')
+          navigate('..')
         } else {
           alert('Error al crear estudiante: ' + result.error)
         }
@@ -286,7 +286,7 @@ const EstudianteVinculacionForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/estudiantes-vinculacion')}
+              onClick={() => navigate('..')}
             >
               Cancelar
             </Button>

@@ -27,7 +27,7 @@ const GrupoAtletasList = () => {
       render: (_, row) => (
         <div className="flex space-x-2">
           <button
-            onClick={() => navigate(`/grupo-atletas/${row.id}/atletas`)}
+            onClick={() => navigate(`${row.id}/atletas`)}
             className="p-1 text-gray-700 hover:bg-gray-100 rounded"
             title="Ver atletas"
           >
@@ -35,7 +35,7 @@ const GrupoAtletasList = () => {
           </button>
           {canEdit && (
             <button
-              onClick={() => navigate(`/grupo-atletas/${row.id}/asignar`)}
+              onClick={() => navigate(`${row.id}/asignar`)}
               className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
               title="Asignar atletas"
             >

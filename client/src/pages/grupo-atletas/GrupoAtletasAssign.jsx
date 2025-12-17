@@ -97,7 +97,7 @@ const GrupoAtletasAssign = () => {
           <p className="text-gray-500">Gestiona las asignaciones sin modificar los datos del grupo</p>
         </div>
         <div className="flex space-x-3">
-          <Button variant="secondary" onClick={() => navigate('/grupo-atletas')}>
+          <Button variant="secondary" onClick={() => navigate('..')}>
             Volver
           </Button>
           <Button variant="secondary" onClick={loadData} disabled={loading}>

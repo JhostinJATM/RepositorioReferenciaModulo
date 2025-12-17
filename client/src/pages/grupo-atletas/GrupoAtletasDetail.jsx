@@ -56,10 +56,10 @@ const GrupoAtletasDetail = () => {
           </p>
         </div>
         <div className="flex space-x-3">
-          <Button variant="secondary" onClick={() => navigate('/grupo-atletas')}>
+          <Button variant="secondary" onClick={() => navigate('..')}>
             Volver
           </Button>
-          <Button variant="secondary" onClick={() => navigate(`/grupo-atletas/${id}/asignar`)}>
+          <Button variant="secondary" onClick={() => navigate(`../${id}/asignar`)}>
             Asignar
           </Button>
           <Button variant="secondary" onClick={loadData} disabled={loading}>

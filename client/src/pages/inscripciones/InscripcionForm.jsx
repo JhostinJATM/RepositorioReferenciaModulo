@@ -42,7 +42,7 @@ const InscripcionForm = () => {
       })
     } catch (error) {
       console.error('Error cargando inscripción:', error)
-      navigate('/inscripciones')
+      navigate('..')
     } finally {
       setLoading(false)
     }
@@ -66,7 +66,7 @@ const InscripcionForm = () => {
       }
 
       if (result.success) {
-        navigate('/inscripciones')
+        navigate('..')
       } else {
         alert('Error al guardar: ' + result.error)
       }
@@ -146,7 +146,7 @@ const InscripcionForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/inscripciones')}
+              onClick={() => navigate('..')}
             >
               Cancelar
             </Button>

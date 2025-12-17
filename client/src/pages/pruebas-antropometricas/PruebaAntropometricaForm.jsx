@@ -44,7 +44,7 @@ const PruebaAntropometricaForm = () => {
       })
     } catch (error) {
       console.error('Error cargando prueba:', error)
-      navigate('/pruebas-antropometricas')
+      navigate('..')
     } finally {
       setLoading(false)
     }
@@ -68,7 +68,7 @@ const PruebaAntropometricaForm = () => {
       }
 
       if (result.success) {
-        navigate('/pruebas-antropometricas')
+        navigate('..')
       } else {
         alert('Error al guardar: ' + result.error)
       }
@@ -151,7 +151,7 @@ const PruebaAntropometricaForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/pruebas-antropometricas')}
+              onClick={() => navigate('..')}
             >
               Cancelar
             </Button>

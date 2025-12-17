@@ -5,7 +5,7 @@
 /* Estilos base personalizados */
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-gray-50 text-gray-900 antialiased font-sans;
   }
 }
 
@@ -57,5 +57,15 @@
   
   .table td {
     @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
   }
 }

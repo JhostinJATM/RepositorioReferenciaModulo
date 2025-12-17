@@ -48,7 +48,7 @@ const PruebaFisicaForm = () => {
       })
     } catch (error) {
       console.error('Error cargando prueba:', error)
-      navigate('/pruebas-fisicas')
+      navigate('..')
     } finally {
       setLoading(false)
     }
@@ -72,7 +72,7 @@ const PruebaFisicaForm = () => {
       }
 
       if (result.success) {
-        navigate('/pruebas-fisicas')
+        navigate('..')
       } else {
         alert('Error al guardar: ' + result.error)
       }
@@ -177,7 +177,7 @@ const PruebaFisicaForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/pruebas-fisicas')}
+              onClick={() => navigate('..')}
             >
               Cancelar
             </Button>

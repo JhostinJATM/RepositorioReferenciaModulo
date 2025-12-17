@@ -40,7 +40,7 @@ const EntrenadorForm = () => {
       setFormData(data)
     } catch (error) {
       console.error('Error cargando entrenador:', error)
-      navigate('/entrenadores')
+      navigate('..')
     } finally {
       setLoading(false)
     }
@@ -65,7 +65,7 @@ const EntrenadorForm = () => {
         const result = await updateEntrenador(id, entrenadorData)
         
         if (result.success) {
-          navigate('/entrenadores')
+          navigate('..')
         } else {
           alert('Error al actualizar: ' + result.error)
         }
@@ -116,7 +116,7 @@ const EntrenadorForm = () => {
         
         if (result.success) {
           alert('Entrenador creado exitosamente')
-          navigate('/entrenadores')
+          navigate('..')
         } else {
           alert('Error al crear entrenador: ' + result.error)
         }
@@ -250,7 +250,7 @@ const EntrenadorForm = () => {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/entrenadores')}
+              onClick={() => navigate('..')}
             >
               Cancelar
             </Button>
