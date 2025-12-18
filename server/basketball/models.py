@@ -35,13 +35,6 @@ class Sexo(models.TextChoices):
     OTRO = 'O', 'Otro'
 
 
-class TipoRol(models.TextChoices):
-    """Enum para tipos de rol en el sistema basketball"""
-    ADMIN = 'ADMIN', 'Administrador'
-    ENTRENADOR = 'ENTRENADOR', 'Entrenador'
-    PASANTE = 'PASANTE', 'Pasante/Estudiante de Vinculación'
-
-
 # =============================================================================
 # Modelo Entrenador (referencia externa a Persona del módulo de usuarios)
 # =============================================================================
