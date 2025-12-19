@@ -183,17 +183,21 @@ const UserModuleService = {
   actualizarPersona: async (personaData) => {
     try {
       const mappedData = {
+        id: personaData.id || personaData.persona_id,
         external: personaData.external,
+        external_id: personaData.external,
         first_name: personaData.nombre,
         last_name: personaData.apellido,
         identification: personaData.dni,
         type_identification: 'CEDULA',
         type_stament: personaData.rol === 'DOCENTE' ? 'DOCENTES' : 'ESTUDIANTES',
         direction: personaData.direccion || '',
-        phono: personaData.telefono || ''
+        phono: personaData.telefono || '',
+        email: personaData.email || '',
       }
       
-      const response = await userModuleClient.put('/api/person/update', mappedData)
+      // El endpoint del user_module responde 405 a PUT; usar POST
+      const response = await userModuleClient.post('/api/person/update', mappedData)
       return {
         success: response.data.status === 'success',
         data: response.data.data,
@@ -273,6 +277,32 @@ const UserModuleService = {
       return null
     } catch (error) {
       console.error(`Error buscando persona ${externalId}:`, error)
+      return null
+    }
+  },
+
+  /**
+   * Buscar persona por identificación (DNI)
+   * @param {string} identification - DNI
+   */
+  buscarPorIdentificacion: async (identification) => {
+    try {
+      const response = await userModuleClient.get(`/api/person/search_identification/${identification}`)
+      if (response.data.status === 'success') {
+        const data = response.data.data
+        return {
+          external_id: data.external || data.external_id || data.externalId,
+          first_name: data.first_name || data.firts_name || '',
+          last_name: data.last_name || '',
+          identification: data.identification || identification,
+          email: data.email || '',
+          phono: data.phono || '',
+          direction: data.direction || '',
+        }
+      }
+      return null
+    } catch (error) {
+      console.error(`Error buscando persona por identificación ${identification}:`, error)
       return null
     }
   }

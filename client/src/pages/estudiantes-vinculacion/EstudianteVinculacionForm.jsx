@@ -13,6 +13,8 @@ const EstudianteVinculacionForm = () => {
   
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
+    persona_external: '',
+    persona_id: null,
     // Datos de Persona (del módulo de usuarios)
     nombre: '',
     apellido: '',
@@ -23,10 +25,7 @@ const EstudianteVinculacionForm = () => {
     direccion: '',
     // Datos específicos de Pasante (del módulo basketball)
     carrera: '',
-    semestre: '',
-    universidad: '',
-    fecha_inicio: '',
-    fecha_fin: ''
+    semestre: ''
   })
 
   const isEdit = !!id
@@ -41,7 +40,22 @@ const EstudianteVinculacionForm = () => {
     try {
       setLoading(true)
       const data = await EstudianteVinculacionService.getById(id)
-      setFormData(data)
+      const personaData = data?.persona_external
+        ? await UserModuleService.buscarPorExternalId(data.persona_external)
+        : null
+
+      setFormData({
+        persona_external: data?.persona_external || '',
+        persona_id: personaData?.id || null,
+        nombre: personaData?.first_name || data?.nombre || '',
+        apellido: personaData?.last_name || data?.apellido || '',
+        dni: personaData?.identification || data?.dni || '',
+        email: personaData?.email || data?.email || '',
+        telefono: personaData?.phono || data?.telefono || '',
+        direccion: personaData?.direction || data?.direccion || '',
+        carrera: data?.carrera || '',
+        semestre: data?.semestre || '',
+      })
     } catch (error) {
       console.error('Error cargando estudiante:', error)
       toast.error('Error al cargar el estudiante')
@@ -62,16 +76,46 @@ const EstudianteVinculacionForm = () => {
     
     try {
       if (isEdit) {
-        // Modo edición: solo actualizar datos de pasante
+        // Modo edición: actualizar datos de persona y luego datos locales
+        let resolvedExternal = formData.persona_external
+        if (formData.persona_external) {
+          const personaUpdate = {
+            id: formData.persona_id,
+            external: formData.persona_external,
+            nombre: formData.nombre,
+            apellido: formData.apellido,
+            dni: formData.dni,
+            email: formData.email,
+            telefono: formData.telefono,
+            direccion: formData.direccion,
+            rol: 'ESTUDIANTE',
+          }
+          const personaResult = await UserModuleService.actualizarPersona(personaUpdate)
+          if (!personaResult.success) {
+            toast.error('Error al actualizar persona: ' + (personaResult.error || ''))
+            setLoading(false)
+            return
+          }
+
+          // Obtener el external actual desde el user_module si cambió
+          resolvedExternal = personaResult.data?.external || personaResult.data?.external_id || formData.persona_external
+          if (formData.dni) {
+            const refreshed = await UserModuleService.buscarPorIdentificacion(formData.dni)
+            if (refreshed?.external_id) {
+              resolvedExternal = refreshed.external_id
+            }
+          }
+          if (resolvedExternal && resolvedExternal !== formData.persona_external) {
+            setFormData((prev) => ({ ...prev, persona_external: resolvedExternal }))
+          }
+        }
+
         const pasanteData = {
+          persona_external: resolvedExternal,
           carrera: formData.carrera,
           semestre: formData.semestre,
-          universidad: formData.universidad,
-          fecha_inicio: formData.fecha_inicio,
-          fecha_fin: formData.fecha_fin
         }
         const result = await updateEstudiante(id, pasanteData)
-        
         if (result.success) {
           toast.success('Estudiante actualizado correctamente')
           navigate('/estudiantes-vinculacion')
@@ -119,9 +163,6 @@ const EstudianteVinculacionForm = () => {
           persona_external: personaResult.personaId,
           carrera: formData.carrera,
           semestre: formData.semestre,
-          universidad: formData.universidad,
-          fecha_inicio: formData.fecha_inicio,
-          fecha_fin: formData.fecha_fin
         }
         
         const result = await createEstudiante(pasanteData)
@@ -152,90 +193,89 @@ const EstudianteVinculacionForm = () => {
       <Card>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
-            {!isEdit && (
-              <>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                  <p className="text-sm text-blue-800">
-                    <strong>Datos de Persona:</strong> Esta información se guardará primero en el módulo de usuarios.
-                  </p>
-                </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800">
+                <strong>Datos de Persona:</strong> Estos datos provienen del módulo de usuarios y pueden actualizarse.
+              </p>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Nombre"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    placeholder="Ej: María"
-                    required
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="Nombre"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                placeholder="Ej: María"
+                required
+              />
 
-                  <Input
-                    label="Apellido"
-                    name="apellido"
-                    value={formData.apellido}
-                    onChange={handleChange}
-                    placeholder="Ej: González"
-                    required
-                  />
+              <Input
+                label="Apellido"
+                name="apellido"
+                value={formData.apellido}
+                onChange={handleChange}
+                placeholder="Ej: González"
+                required
+              />
 
-                  <Input
-                    label="DNI / Cédula"
-                    name="dni"
-                    value={formData.dni}
-                    onChange={handleChange}
-                    placeholder="Ej: 0987654321"
-                    required
-                    maxLength={13}
-                  />
+              <Input
+                label="DNI / Cédula"
+                name="dni"
+                value={formData.dni}
+                onChange={handleChange}
+                placeholder="Ej: 0987654321"
+                required
+                maxLength={13}
+              />
 
-                  <Input
-                    label="Email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Ej: maria.gonzalez@email.com"
-                    required
-                  />
+              <Input
+                label="Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Ej: maria.gonzalez@email.com"
+                required
+                disabled={isEdit}
+              />
 
-                  <Input
-                    label="Contraseña"
-                    name="clave"
-                    type="password"
-                    value={formData.clave}
-                    onChange={handleChange}
-                    placeholder="Contraseña para acceso al sistema"
-                    required
-                    minLength={6}
-                  />
-
-                  <Input
-                    label="Teléfono"
-                    name="telefono"
-                    value={formData.telefono}
-                    onChange={handleChange}
-                    placeholder="Ej: 0999999999"
-                  />
-                </div>
-
+              {!isEdit && (
                 <Input
-                  label="Dirección"
-                  name="direccion"
-                  value={formData.direccion}
+                  label="Contraseña"
+                  name="clave"
+                  type="password"
+                  value={formData.clave}
                   onChange={handleChange}
-                  placeholder="Ej: Calle Secundaria 456"
+                  placeholder="Contraseña para acceso al sistema"
+                  required
+                  minLength={6}
                 />
+              )}
 
-                <hr className="my-6" />
+              <Input
+                label="Teléfono"
+                name="telefono"
+                value={formData.telefono}
+                onChange={handleChange}
+                placeholder="Ej: 0999999999"
+              />
+            </div>
 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                  <p className="text-sm text-green-800">
-                    <strong>Datos de Estudiante:</strong> Información específica del estudiante de vinculación.
-                  </p>
-                </div>
-              </>
-            )}
+            <Input
+              label="Dirección"
+              name="direccion"
+              value={formData.direccion}
+              onChange={handleChange}
+              placeholder="Ej: Calle Secundaria 456"
+            />
+
+            <hr className="my-6" />
+
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-green-800">
+                <strong>Datos de Estudiante:</strong> Información específica del estudiante de vinculación.
+              </p>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
@@ -254,33 +294,6 @@ const EstudianteVinculacionForm = () => {
                 onChange={handleChange}
                 placeholder="Ej: 5"
                 required
-              />
-
-              <Input
-                label="Universidad"
-                name="universidad"
-                value={formData.universidad}
-                onChange={handleChange}
-                placeholder="Ej: Universidad Central"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input
-                label="Fecha Inicio"
-                name="fecha_inicio"
-                type="date"
-                value={formData.fecha_inicio}
-                onChange={handleChange}
-                required
-              />
-
-              <Input
-                label="Fecha Fin"
-                name="fecha_fin"
-                type="date"
-                value={formData.fecha_fin}
-                onChange={handleChange}
               />
             </div>
           </div>

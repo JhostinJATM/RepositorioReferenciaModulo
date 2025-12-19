@@ -26,22 +26,15 @@ const useEstudianteVinculacionStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const response = await EstudianteVinculacionService.getAll(get().filtros)
-      // El servicio devuelve el body directo, no envuelve en "data"
-      let estudiantes = response?.results || response || []
-
-      // Normalizar a arreglo y descartar entradas undefined/null
-      if (!Array.isArray(estudiantes)) {
-        estudiantes = []
-      } else {
-        estudiantes = estudiantes.filter(Boolean)
-      }
+      // El servicio devuelve el array de data directo
+      let estudiantes = Array.isArray(response) ? response.filter(Boolean) : []
       
       // Asegurar que todos tengan campos básicos (valores por defecto)
       estudiantes = estudiantes.map(e => ({
         ...e,
         nombre: e.nombre || '',
         apellido: e.apellido || '',
-        dni: e.dni || '',
+        dni: e.dni || e.persona_external || '',
         email: e.email || '',
         telefono: e.telefono || '',
         direccion: e.direccion || ''
@@ -84,7 +77,7 @@ const useEstudianteVinculacionStore = create((set, get) => ({
       
       set({ 
         estudiantes,
-        totalItems: response.data?.count || 0,
+        totalItems: estudiantes.length,
         loading: false 
       })
     } catch (error) {
@@ -97,10 +90,10 @@ const useEstudianteVinculacionStore = create((set, get) => ({
     try {
       const response = await EstudianteVinculacionService.create(data)
       set((state) => ({ 
-        estudiantes: [...state.estudiantes, response.data],
+        estudiantes: [...state.estudiantes, response],
         loading: false 
       }))
-      return { success: true, data: response.data }
+      return { success: true, data: response }
     } catch (error) {
       set({ error: error.message, loading: false })
       return { success: false, error: error.message }
@@ -111,12 +104,13 @@ const useEstudianteVinculacionStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const response = await EstudianteVinculacionService.update(id, data)
+      // Actualizar lista local con la respuesta y mantener consistencia
       set((state) => ({
-        estudiantes: state.estudiantes.map(e => e.id === id ? response.data : e),
+        estudiantes: state.estudiantes.map(e => e.id === id ? response : e),
         estudianteSeleccionado: null,
         loading: false
       }))
-      return { success: true, data: response.data }
+      return { success: true, data: response }
     } catch (error) {
       set({ error: error.message, loading: false })
       return { success: false, error: error.message }

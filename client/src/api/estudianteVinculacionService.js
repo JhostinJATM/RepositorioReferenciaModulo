@@ -13,7 +13,8 @@ const EstudianteVinculacionService = {
    */
   getAll: async (params = {}) => {
     const response = await apiClient.get(ENDPOINTS.ESTUDIANTES_VINCULACION, { params })
-    return response.data
+    // El backend devuelve { status, message, data }
+    return response.data?.data || []
   },
 
   /**
@@ -22,7 +23,7 @@ const EstudianteVinculacionService = {
    */
   getById: async (id) => {
     const response = await apiClient.get(`${ENDPOINTS.ESTUDIANTES_VINCULACION}${id}/`)
-    return response.data
+    return response.data?.data
   },
 
   /**
@@ -31,7 +32,7 @@ const EstudianteVinculacionService = {
    */
   create: async (data) => {
     const response = await apiClient.post(ENDPOINTS.ESTUDIANTES_VINCULACION, data)
-    return response.data
+    return response.data?.data
   },
 
   /**
@@ -41,7 +42,7 @@ const EstudianteVinculacionService = {
    */
   update: async (id, data) => {
     const response = await apiClient.put(`${ENDPOINTS.ESTUDIANTES_VINCULACION}${id}/`, data)
-    return response.data
+    return response.data?.data
   },
 
   /**
@@ -50,7 +51,7 @@ const EstudianteVinculacionService = {
    */
   delete: async (id) => {
     const response = await apiClient.delete(`${ENDPOINTS.ESTUDIANTES_VINCULACION}${id}/`)
-    return response.data
+    return response.data?.data
   },
 
   /**
@@ -59,7 +60,7 @@ const EstudianteVinculacionService = {
    */
   getByCarrera: async (carrera) => {
     const response = await apiClient.get(ENDPOINTS.ESTUDIANTES_VINCULACION, { params: { carrera } })
-    return response.data
+    return response.data?.data || []
   },
 }
 

@@ -11,11 +11,14 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:80
 // Por defecto apunta al servicio de usuarios (Spring) en 8096
 export const AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:8096'
 
-// Versión de la API
-export const API_VERSION = import.meta.env.VITE_API_VERSION || 'v1'
+// Módulo/segmento de la API (el backend usa /api/basketball/)
+export const API_MODULE = import.meta.env.VITE_API_MODULE || 'basketball'
 
-// URL completa de la API
-export const API_URL = `${API_BASE_URL}/api/${API_VERSION}`
+// Versión de la API (se mantiene para compatibilidad; no se usa en API_URL)
+export const API_VERSION = import.meta.env.VITE_API_VERSION || API_MODULE
+
+// URL completa de la API (incluye el módulo correcto)
+export const API_URL = `${API_BASE_URL}/api/${API_MODULE}`
 
 // Endpoints del backend organizados por módulo
 // IMPORTANTE: Django requiere trailing slash en las URLs
@@ -26,8 +29,8 @@ export const ENDPOINTS = {
   // Entrenadores
   ENTRENADORES: '/entrenadores/',
   
-  // Estudiantes de Vinculación (el endpoint del backend es /pasantes)
-  ESTUDIANTES_VINCULACION: '/pasantes/',
+  // Estudiantes de Vinculación
+  ESTUDIANTES_VINCULACION: '/estudiantes-vinculacion/',
   
   // Grupos de Atletas
   GRUPOS_ATLETAS: '/grupos-atletas/',
